@@ -44,6 +44,27 @@
             font-size: 15px;
         }
 
+        button,
+        input {
+            margin-top: 15px;
+            padding: 12px 28px;
+            border-radius: 30px;
+            border: none;
+            font-size: 1em;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff2e75, #ff6aa5);
+            color: white;
+            cursor: pointer;
+        }
+
+        input {
+            width: 80%;
+            text-align: center;
+        }
+
+
         /* FALLING ITEMS */
         .falling {
             position: absolute;
@@ -142,7 +163,11 @@
 </head>
 
 <body>
-    <div class="pc-hint">Nhặt hết quà nhé</div>
+    <audio id="music" src="btyl.mp3" loop></audio>
+    <div class="card" id="card">
+        <h1>Nhặt hết quà em nhé</h1>
+        <button onclick="start();">Bắt đầu ❤️</button>
+    </div>
     <div></div>
     <div class="popup" id="popup">
         <div class="popup-content">
@@ -155,15 +180,21 @@
     <script>
 
         const images = [
-            { src: "images/heart.png", type: "heart", image: "IMG_20190811_161332", content: "", isShow: false },
-            { src: "images/gift.png", type: "gift", image: "IMG_20190930_202013", content: "", isShow: false },
-            { src: "images/letter.png", type: "letter", image: "IMG_20191007_224440", content: "", isShow: false },
-            { src: "images/heart.png", type: "heart", image: "IMG_20191201_154117", content: "", isShow: false },
-            { src: "images/gift.png", type: "gift", image: "IMG_20200221_200641", content: "", isShow: false },
-            { src: "images/letter.png", type: "letter", image: "IMG_20200513_192951", content: "", isShow: false },
-            { src: "images/heart.png", type: "heart", image: "IMG_20200516_115920", content: "", isShow: false },
-            { src: "images/gift.png", type: "gift", image: "IMG_20200516_141649", content: "", isShow: false },
-            { src: "images/letter.png", type: "letter", image: "IMG_20200524_160014", content: "", isShow: false }
+            { src: "images/heart.png", type: "heart", image: "IMG_20200221_200641", content: "Bé iu nhà anh cũng biết làm nũng nè!", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20200513_192951", content: "Ai cười tưới vậy ta?", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20200516_115920", content: "Chỗ này là nhà sách nè mình đi Van Hạnh mall", isShow: false },
+            { src: "images/heart.png", type: "heart", image: "IMG_20200516_141649", content: "Ai mà xinh vậy", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20200524_160014", content: "Chụp ảnh đôi nè, anh nhớ cái áo cặp này ghê", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20200612_131012", content: "Hồi đó mình hay ăn bánh này, sưu tập quá trời luôn, hy vọng em không bán ve chai hết rồi", isShow: false },
+            { src: "images/heart.png", type: "heart", image: "IMG_20200626_131719", content: "Hồi đó nhìn e ngây thơ đáng yêu dễ ghê, giờ vẫn vậy nhưng khó tinh với anh hơn rồi", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20200626_132142", content: "Cười tươi nè", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20200626_132651", content: "Mè nheo nà", isShow: false },
+            { src: "images/heart.png", type: "heart", image: "IMG_20200704_160227", content: "Tấm này là anh đi teambuilding mà trốn ra với em nè", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20200713_190931", content: "Xanh xanh KDU", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20201018_145238", content: "Hồi đó có người mê đi hội chợ mua đồ, cũng lâu rồi không còn cơ hội đi với em nữa, không biết ai đó còn muốn đi với anh không", isShow: false },
+            { src: "images/heart.png", type: "heart", image: "IMG_20201018_145547", content: "Hội chợ nữa nè, thơm thơm", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20201229_222802", content: "Đà Lạc, nơi đầu tiên mình đi du lịch chung. Năm nay thì mình chưa đi, a xin lỗi vì anh mà mình không thể du lịch chung, cố gắng 2026 sẽ bù 1 chuyến nhé", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20210115_130605", content: "Hờn anh rồi, vì anh mà 1 năm qua em buồn nhiều đúng không. Cho anh xin lỗi nhiều mà", isShow: false }
         ];
 
         let indexShowFalling = 0;
@@ -173,7 +204,7 @@
             const randomItem = images[indexShowFalling];
             indexShowFalling++;
             if (indexShowFalling == images.length) {
-                indexShowFalling = 0;
+                clearInterval(intervalId);
             }
             if (randomItem.isShow) {
                 return;
@@ -195,19 +226,25 @@
 
             setTimeout(() => {
                 item.remove();
-            }, 8000);
+            }, 10000000);
         }
 
-        setInterval(createFallingItem, 1000);
-
+        let intervalId = 0;
+        function start() {
+            document.getElementById("music").play();
+            const card = document.getElementById("card");
+            card.style.display = "none";
+            intervalId = setInterval(createFallingItem, 1000);
+        }
+        let countClickPopup = 0;
         function showPopup(item) {
             item.isShow = true;
             const popup = document.getElementById("popup");
             const text = document.getElementById("popup-text");
             const image = document.getElementById("popup-img");
-            const fallings = document.getElementsByName("falling " + item.image);
+            const fallings = document.getElementsByClassName("falling " + item.image);
             for (let i = 0; i < fallings.length; i++) {
-                fallings[i].style.display = "none";
+                fallings[i].remove()
             }
             image.src = "images/" + item.image + ".jpg";
             text.innerText = item.content;
@@ -216,6 +253,10 @@
 
         function closePopup() {
             document.getElementById("popup").classList.remove("active");
+            countClickPopup++;
+            if (countClickPopup == images.length) {
+                window.location.replace("3a708818-3080-4468-bd70-7d236230ffa2.html");
+            }
         }
 
     </script>
