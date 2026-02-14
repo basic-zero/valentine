@@ -517,26 +517,43 @@
 </div>
 `,
 
-            ...["2019", "2020", "2021", "2022", "2023", "2024"].map(y => `
+            ...[
+                {
+                    "title": "Nơi tình yêu bắt đầu",
+                    "img": "IMG_20190811_161332.jpg",
+                    "content": "Có lẻ đây là nơi bắt đầu của tụi mình, anh còn nhớ anh đã thích thầm em từ những lúc em cười như này, thời điểm này a chưa từng dám nghĩ mình sẽ có được em"
+                },
+                {
+                    "title": "Bỡ ngỡ lúc mới yêu",
+                    "img": "IMG_20190930_202013.jpg",
+                    "content": "Rồi mình đã đến với nhau, thời điểm đó anh với em cũng không xác định rõ mình sẽ đi đến đâu, chỉ biết răng trong anh lúc đó có rất nhiều bỡ ngỡ, bởi lẽ đây là lần đầu anh yêu một cô gái cá tính đến như vậy dẫn đến khá nhiều thiếu sót"
+                },
+                {
+                    "title": "Bỡ ngỡ lúc mới yêu",
+                    "img": "IMG_20191007_224440.jpg",
+                    "content": "Anh nhớ rõ mình đã xém chia tay ở giai đoạn này, vì anh không tự tin mang cho em hạnh phúc, có lẻ lúc này anh không đủ tự tin với mọi chuyện đã qua. Rất may mắn là em đã không bỏ cuộc, cảm ơn em vì đã chọn tiếp tục bên anh"
+                },
+                {
+                    "title": "Bỡ ngỡ lúc mới yêu",
+                    "img": "IMG_20191201_154117.jpg",
+                    "content": "Em thật sự đặc biệt, em là người đầu tiên đánh anh đó. Mặc dù sau này mình đã thỏa thuận là không đánh anh nữa nhưng thật sự đôi khi vẫn muốn nói với em là \"Em đánh anh đi rồi đừng giận anh nữa\""
+                },
+                {
+                    "title": "Bỡ ngỡ lúc mới yêu",
+                    "img": "IMG_20191201_154117.jpg",
+                    "content": "Em thật sự đặc biệt, em là người đầu tiên đánh anh đó. Mặc dù sau này mình đã thỏa thuận là không đánh anh nữa nhưng thật sự đôi khi vẫn muốn nói với em là \"Em đánh anh đi rồi đừng giận anh nữa\""
+                },
+            ].map(y => `
 <div class="parallax">
-    <div class="layer year" data-depth="0.2">${y}</div>
+    <div class="layer year" data-depth="0.2">${y.title}</div>
     <div class="layer" data-depth="0.4">
-        <img src="images/${y}.jpg">
+        <img src="images/${y.img}">
     </div>
     <div class="layer" data-depth="0.6">
-        <p>Valentine ${y} – một năm bên nhau 💖</p>
+        <p>${y.content}</p>
     </div>
 </div>
-`),
-
-            `
-<div class="parallax">
-    <h1>🔒 Valentine 2025</h1>
-    <p>Nhập ngày kỷ niệm 💍</p>
-    <input id="pass" placeholder="DDMM">
-    <button onclick="unlock()">Mở khóa ❤️</button>
-</div>
-`
+`)
         ];
 
         const isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
@@ -592,17 +609,23 @@
             card.innerHTML = steps[step];
 
             // PC input fix (đã làm ở bước trước)
-            if (!isMobile && step === steps.length - 1) {
-                document.body.classList.add("input-mode");
-            } else {
-                document.body.classList.remove("input-mode");
-            }
+            // if (!isMobile && step === steps.length - 1) {
+            //  document.body.classList.add("input-mode");
+            // } else {
+            //   document.body.classList.remove("input-mode");
+            //} 
         }
         render();
 
         /* STEP CONTROL */
         function next() {
-            if (step < steps.length - 1) step++;
+            debugger;
+            if (step < steps.length - 1) {
+                step++;
+            } else {
+
+                window.location.replace("/valentinedrop.html");
+            }
             render();
             if (step == 1) {
                 playMusic();

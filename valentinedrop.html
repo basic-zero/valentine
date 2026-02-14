@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Happy Valentine ❤️</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            height: 100vh;
+        }
+
+        /* CARD */
+        .card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .card h1 {
+            color: #ff4d6d;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 15px;
+        }
+
+        /* FALLING ITEMS */
+        .falling {
+            position: absolute;
+            cursor: pointer;
+            animation: fall linear infinite;
+            user-select: none;
+            padding: 10px;
+            border-radius: 16px;
+            /* tăng vùng bấm */
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100px) rotate(0deg);
+            }
+
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        /* POPUP */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 100;
+            padding: 15px;
+        }
+
+        .popup.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            animation: zoom 0.3s ease;
+        }
+
+        .popup-content img {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+
+        .popup-content p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .popup-content button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #ff4d6d;
+            color: white;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        @keyframes zoom {
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* Hint cho PC */
+        .pc-hint {
+            position: fixed;
+            bottom: 20px;
+            font-size: 0.9em;
+            opacity: 0.7;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pc-hint">Nhặt hết quà nhé</div>
+    <div></div>
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <img id="popup-img">
+            <p id="popup-text"></p>
+            <button onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+
+        const images = [
+            { src: "images/heart.png", type: "heart", image: "IMG_20190811_161332", content: "", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20190930_202013", content: "", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20191007_224440", content: "", isShow: false },
+            { src: "images/heart.png", type: "heart", image: "IMG_20191201_154117", content: "", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20200221_200641", content: "", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20200513_192951", content: "", isShow: false },
+            { src: "images/heart.png", type: "heart", image: "IMG_20200516_115920", content: "", isShow: false },
+            { src: "images/gift.png", type: "gift", image: "IMG_20200516_141649", content: "", isShow: false },
+            { src: "images/letter.png", type: "letter", image: "IMG_20200524_160014", content: "", isShow: false }
+        ];
+
+        let indexShowFalling = 0;
+
+        function createFallingItem() {
+            const item = document.createElement("img");
+            const randomItem = images[indexShowFalling];
+            indexShowFalling++;
+            if (indexShowFalling == images.length) {
+                indexShowFalling = 0;
+            }
+            if (randomItem.isShow) {
+                return;
+            }
+            item.src = randomItem.src;
+            item.className = "falling " + randomItem.image;
+            const maxLeft = window.innerWidth - (window.innerWidth < 768 ? 100 : 60);
+            const width = window.innerWidth < 768 ? 250 : 100;
+            console.log(window.innerWidth);
+            item.style.left = Math.random() * maxLeft + "px";
+            item.style.width = width + "px";
+            item.style.animationDuration = (4 + Math.random() * 4) + "s";
+
+            item.onclick = function () {
+                showPopup(randomItem);
+            };
+
+            document.body.appendChild(item);
+
+            setTimeout(() => {
+                item.remove();
+            }, 8000);
+        }
+
+        setInterval(createFallingItem, 1000);
+
+        function showPopup(item) {
+            item.isShow = true;
+            const popup = document.getElementById("popup");
+            const text = document.getElementById("popup-text");
+            const image = document.getElementById("popup-img");
+            const fallings = document.getElementsByName("falling " + item.image);
+            for (let i = 0; i < fallings.length; i++) {
+                fallings[i].style.display = "none";
+            }
+            image.src = "images/" + item.image + ".jpg";
+            text.innerText = item.content;
+            popup.classList.add("active");
+        }
+
+        function closePopup() {
+            document.getElementById("popup").classList.remove("active");
+        }
+
+    </script>
+
+</body>
+
+</html>
