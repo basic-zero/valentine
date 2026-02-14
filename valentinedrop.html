@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <head>
     <meta charset="UTF-8">
@@ -165,7 +166,7 @@
 <body>
     <audio id="music" src="btyl.mp3" loop></audio>
     <div class="card" id="card">
-        <h1>Nhặt hết quà em nhé</h1>
+        <h1>Tặng em một rổ kỹ niệm, nhặt hết quà em nhé</h1>
         <button onclick="start();">Bắt đầu ❤️</button>
     </div>
     <div></div>
@@ -212,13 +213,16 @@
             item.src = randomItem.src;
             item.className = "falling " + randomItem.image;
             const maxLeft = window.innerWidth - (window.innerWidth < 768 ? 100 : 60);
-            const width = window.innerWidth < 768 ? 250 : 100;
+            const width = window.innerWidth < 768 ? 150 : 100;
             console.log(window.innerWidth);
             item.style.left = Math.random() * maxLeft + "px";
             item.style.width = width + "px";
             item.style.animationDuration = (4 + Math.random() * 4) + "s";
 
             item.onclick = function () {
+                showPopup(randomItem);
+            };
+            item.touchStart = function () {
                 showPopup(randomItem);
             };
 
